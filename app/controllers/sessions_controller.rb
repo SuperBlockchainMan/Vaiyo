@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
   include Emailer
   include LdapAuthenticator
 
-  skip_before_action :verify_authenticity_token, only: [:omniauth, :fail]
+  skip_before_action :verify_authenticity_token, only: [:omniauth, :fail, :create]
   before_action :check_user_signup_allowed, only: [:new]
   before_action :ensure_unauthenticated_except_twitter, only: [:new, :signin, :ldap_signin]
 
@@ -63,24 +63,24 @@ class SessionsController < ApplicationController
 
   # POST /users/login
   def create
-    logger.info "Support: #{session_params[:email]} is attempting to login."
+    logger.info "Support: #{session_params[:waddress]} is attempting to login."
 
-    user = User.include_deleted.find_by(email: session_params[:email].downcase)
+    user = User.include_deleted.find_by(email: session_params[:waddress].downcase)
 
     is_super_admin = user&.has_role? :super_admin
 
     # Scope user to domain if the user is not a super admin
-    user = User.include_deleted.find_by(email: session_params[:email].downcase, provider: @user_domain) unless is_super_admin
+    user = User.include_deleted.find_by(email: session_params[:waddress].downcase, provider: @user_domain) unless is_super_admin
 
     # Check user with that email exists
-    return redirect_to(signin_path, alert: I18n.t("invalid_credentials")) unless user && verify_recaptcha
+    return redirect_to(signin_path, alert: I18n.t("invalid_credentials")) unless user #&& verify_recaptcha #dont need recaptcha
 
     # Check if authenticators have switched
     return switch_account_to_local(user) if !is_super_admin && auth_changed_to_local?(user)
 
     # Check correct password was entered
-    return redirect_to(signin_path, alert: I18n.t("invalid_credentials")) unless user.try(:authenticate,
-      session_params[:password])
+    # return redirect_to(signin_path, alert: I18n.t("invalid_credentials")) unless user.try(:authenticate,
+    #   session_params[:password])
     # Check that the user is not deleted
     return redirect_to root_path, flash: { alert: I18n.t("registration.banned.fail") } if user.deleted?
 
@@ -139,9 +139,9 @@ class SessionsController < ApplicationController
     ldap_config[:filter] = ENV['LDAP_FILTER']
     ldap_config[:uid] = ENV['LDAP_UID']
 
-    if params[:session][:username].blank? || session_params[:password].blank?
-      return redirect_to(ldap_signin_path, alert: I18n.t("invalid_credentials"))
-    end
+    # if params[:session][:username].blank? || session_params[:password].blank? #by ringnan
+    #   return redirect_to(ldap_signin_path, alert: I18n.t("invalid_credentials"))
+    # end
 
     result = send_ldap_request(params[:session], ldap_config)
 
@@ -165,7 +165,8 @@ class SessionsController < ApplicationController
   end
 
   def session_params
-    params.require(:session).permit(:email, :password)
+    # params.require(:session).permit(:waddress)
+    params.permit(:waddress)
   end
 
   def one_provider

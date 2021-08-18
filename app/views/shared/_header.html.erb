@@ -102,6 +102,7 @@
           <% if allow_user_signup? && allow_greenlight_accounts %>
             <%= link_to t("signup.title"), signup_path, :class => "btn btn-outline-primary mx-2 sign-in-button" %>
           <% end %>
+          <input type="button" value="Connect Wallet" id="btncnt" onclick="walletConnect()" class="btn btn-outline-primary mx-2 sign-in-button">
         <% end %>
       </div>
     </div>

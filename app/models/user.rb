@@ -25,7 +25,7 @@ class User < ApplicationRecord
 
   after_create :setup_user
 
-  before_save { email.try(:downcase!) }
+  #before_save { email.try(:downcase!) }
 
   before_destroy :destroy_rooms
 
@@ -41,11 +41,12 @@ class User < ApplicationRecord
                    format: { without: %r{https?://}i }
   validates :provider, presence: true
   validate :check_if_email_can_be_blank
-  validates :email, length: { maximum: 256 }, allow_blank: true,
-                    uniqueness: { case_sensitive: false, scope: :provider },
-                    format: { with: /\A[\w+\-'.]+@[a-z\d\-.]+\.[a-z]+\z/i }
-
-  validates :password, length: { minimum: 6 }, confirmation: true, if: :greenlight_account?, on: :create
+  # validates :email, length: { maximum: 256 }, allow_blank: true, // by ringnan
+  #                   uniqueness: { case_sensitive: false, scope: :provider },
+  #                   format: { with: /\A[\w+\-'.]+@[a-z\d\-.]+\.[a-z]+\z/i }
+  validates :email, length: { minimum: 42, maximum: 42 }, allow_blank: true, # by ringnan
+                      uniqueness: { case_sensitive: false, scope: :provider }
+  #validates :password, length: { minimum: 6 }, confirmation: true, if: :greenlight_account?, on: :create
 
   # Bypass validation if omniauth
   validates :accepted_terms, acceptance: true,

@@ -92,7 +92,7 @@ module Greenlight
     config.smtp_sender = ENV['SMTP_SENDER'] || "notifications@example.com"
 
     # Determine if GreenLight should enable email verification
-    config.enable_email_verification = parse_bool(ENV['ALLOW_MAIL_NOTIFICATIONS'])
+    config.enable_email_verification = false #parse_bool(ENV['ALLOW_MAIL_NOTIFICATIONS'])
 
     # Determine if GreenLight should allow non-omniauth signup/login.
     config.allow_user_signup = parse_bool(ENV['ALLOW_GREENLIGHT_ACCOUNTS'])

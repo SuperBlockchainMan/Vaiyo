@@ -45,11 +45,11 @@
               <div class="invalid-feedback d-block"><%= @user.errors.full_messages_for(:name).first %></div>
             </div>
             <div class="form-group">
-              <%= f.label :email, t("email"), class: "form-label" %>
-              <%= f.email_field :email, class: "form-control #{form_is_invalid?(@user, :email)}", placeholder: t("email") %>
+              <%= f.label :email, t("waddress"), class: "form-label" %>
+              <%= f.text_field :email, id: "txtwaddress", class: "form-control #{form_is_invalid?(@user, :email)}", placeholder: t("waddress"), readonly: true %>
               <div class="invalid-feedback d-block"><%= @user.errors.full_messages_for(:email).first %></div>
             </div>
-            <div class="form-group">
+<!--            <div class="form-group">
               <%= f.label :password, t("password"), class: "form-label" %>
               <%= f.password_field :password, class: "form-control #{form_is_invalid?(@user, :password)}", placeholder: t("password") %>
               <div class="invalid-feedback d-block"><%= @user.errors.full_messages_for(:password).first %></div>
@@ -58,7 +58,7 @@
               <%= f.label :password_confirmation, t("signup.password_confirm"), class: "form-label" %>
               <%= f.password_field :password_confirmation, class: "form-control #{form_is_invalid?(@user, :password_confirmation)}", placeholder: t("signup.password_confirm") %>
               <div class="invalid-feedback d-block"><%= @user.errors.full_messages_for(:password_confirmation).first %></div>
-            </div>
+            </div> -->
             <% if Rails.configuration.terms %>
               <div class="form-inline">
                 <label class="custom-switch">

@@ -56,11 +56,11 @@ class UsersController < ApplicationController
     send_registration_email
 
     # Sign in automatically if email verification is disabled or if user is already verified.
-    if !Rails.configuration.enable_email_verification || @user.email_verified
+#    if !Rails.configuration.enable_email_verification || @user.email_verified
       @user.set_role(initial_user_role(@user.email))
 
       login(@user) && return
-    end
+#    end
 
     send_activation_email(@user, @user.create_activation_token)
 

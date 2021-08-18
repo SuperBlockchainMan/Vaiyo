@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 2021_02_10_111735) do
     t.boolean "accepted_terms", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "email_verified", default: false
+    t.boolean "email_verified", default: true
     t.string "language", default: "default"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
