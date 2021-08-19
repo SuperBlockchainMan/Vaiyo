@@ -47,7 +47,7 @@ module Registrar
   # Checks if the user passes the requirements to be invited
   def passes_invite_reqs
     # check if user needs to be invited and IS invited
-    invitation = check_user_invited(@user.email, session[:invite_token], @user_domain)
+    invitation = check_user_invited(@user.waddress, session[:invite_token], @user_domain)
 
     @user.email_verified = true if invitation[:verified]
 
@@ -59,7 +59,7 @@ module Registrar
     valid_user = @user.valid?
     valid_captcha = Rails.configuration.recaptcha_enabled ? verify_recaptcha(model: @user) : true
 
-    logger.error("Support: #{@user.email} creation failed: User params are not valid.") unless valid_user
+    logger.error("Support: #{@user.waddress} creation failed: User params are not valid.") unless valid_user
 
     valid_user && valid_captcha
   end

@@ -40,11 +40,12 @@ class User < ApplicationRecord
   validates :name, length: { maximum: 256 }, presence: true,
                    format: { without: %r{https?://}i }
   validates :provider, presence: true
-  validate :check_if_email_can_be_blank
+  # validate :check_if_email_can_be_blank
+  validate :check_if_waddress_can_be_blank
   # validates :email, length: { maximum: 256 }, allow_blank: true, // by ringnan
   #                   uniqueness: { case_sensitive: false, scope: :provider },
   #                   format: { with: /\A[\w+\-'.]+@[a-z\d\-.]+\.[a-z]+\z/i }
-  validates :email, length: { minimum: 42, maximum: 42 }, allow_blank: true, # by ringnan
+  validates :waddress, length: { minimum: 42, maximum: 42 }, allow_blank: true, # by ringnan
                       uniqueness: { case_sensitive: false, scope: :provider }
   #validates :password, length: { minimum: 6 }, confirmation: true, if: :greenlight_account?, on: :create
 
@@ -67,6 +68,7 @@ class User < ApplicationRecord
         u.name = auth_name(auth) unless u.name
         u.username = auth_username(auth) unless u.username
         u.email = auth_email(auth)
+        u.waddress = auth_waddress(auth)
         u.image = auth_image(auth) unless u.image
         auth_roles(u, auth)
         u.email_verified = true
@@ -108,7 +110,7 @@ class User < ApplicationRecord
 
       like = like_text # Get the correct like clause to use based on db adapter
 
-      search_query = "users.name #{like} :search OR users.email #{like} :search"
+      search_query = "users.name #{like} :search OR users.waddress #{like} :search"
 
       search_param = "%#{sanitize_sql_like(string)}%"
       where(search_query, search: search_param)
@@ -192,7 +194,6 @@ class User < ApplicationRecord
     new_role = Role.find_by(name: role, provider: role_provider)
 
     return if new_role.nil?
-
     create_home_room if main_room.nil? && new_role.get_permission("can_create_rooms")
 
     update_attribute(:role, new_role)
@@ -243,6 +244,16 @@ class User < ApplicationRecord
         errors.add(:email, I18n.t("errors.messages.blank"))
       elsif provider == "greenlight"
         errors.add(:email, I18n.t("errors.messages.blank"))
+      end
+    end
+  end
+
+  def check_if_waddress_can_be_blank
+    if waddress.blank?
+      if Rails.configuration.loadbalanced_configuration && greenlight_account?
+        errors.add(:waddress, I18n.t("errors.messages.blank"))
+      elsif provider == "greenlight"
+        errors.add(:waddress, I18n.t("errors.messages.blank"))
       end
     end
   end

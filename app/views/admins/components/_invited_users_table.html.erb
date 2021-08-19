@@ -6,7 +6,7 @@
           <thead>
             <tr>
               <th>
-                <%= t("email") %>
+                <%= t("waddress") %>
               </th>
               <th>
                 <%= t("administrator.users.table.time") %>
@@ -21,7 +21,7 @@
               <% @users.each do |user| %>
                 <tr>
                     <td>
-                      <div><%= user.email %></div>
+                      <div><%= user.waddress %></div>
                     </td>
                     <td>
                       <div><%= view_date(user.updated_at) %></div>

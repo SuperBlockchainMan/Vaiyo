@@ -38,9 +38,9 @@
       </div>
 
       <div class="col-sm-6 mb-4">
-        <%= f.label :email, t("email"), class: "form-label" %>
+        <%= f.label :waddress, t("waddress"), class: "form-label" %>
         <div class="input-icon">
-          <%= f.email_field :email, class: "form-control #{form_is_invalid?(@user, :email)}", placeholder: t("email"), readonly: readonly %>
+          <%= f.text_field :waddress, class: "form-control #{form_is_invalid?(@user, :waddress)}", placeholder: t("waddress"), readonly: readonly %>
         </div>
       </div>
     </div>

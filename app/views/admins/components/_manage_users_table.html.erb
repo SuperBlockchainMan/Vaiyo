@@ -13,11 +13,11 @@
                  ↑
                 <% end %>
               </th>
-              <th data-header="email" data-order="<%= @order_column == "email" ? @order_direction : "none" %>">
+              <th data-header="waddress" data-order="<%= @order_column == "waddress" ? @order_direction : "none" %>">
                 <%= t("administrator.users.table.username") %>
-                <% if @order_column == "email" && @order_direction == "desc" %>
+                <% if @order_column == "waddress" && @order_direction == "desc" %>
                  ↓
-                <% elsif @order_column == "email" && @order_direction == "asc" %>
+                <% elsif @order_column == "waddress" && @order_direction == "asc" %>
                  ↑
                 <% end %>
               </th>
@@ -50,7 +50,7 @@
                       <div><%= user.name %></div>
                       <div class="small text-muted"><%= [t("administrator.users.table.created"), ": ", view_date(user.created_at)].join.html_safe %></div>
                     </td>
-                    <td class="user-email"><%= user.email && user.email != "" ? user.email : user.username%></td>
+                    <td class="user-email"><%= user.waddress && user.waddress != "" ? user.waddress : user.username%></td>
                     <td><%= (user.provider === 'greenlight') ? 'Vaiyo' : user.provider %></td>
                     <td class="text-center">
                       <%= render "admins/components/admins_role", role: user.role %>
@@ -87,11 +87,11 @@
                               <%= link_to admin_edit_user_path(user_uid: user.uid), class: "dropdown-item" do %>
                                 <i class="dropdown-icon fas fa-user-edit"></i> <%= t("administrator.users.settings.edit") %>
                               <% end %>
-                              <button class= "merge-user dropdown-item" data-path="<%= merge_user_path(user_uid: user.uid) %>" data-info="<%= user.slice(:name, :email, :uid).to_json %>" data-toggle="modal" data-target="#mergeUserModal">
+                              <button class= "merge-user dropdown-item" data-path="<%= merge_user_path(user_uid: user.uid) %>" data-info="<%= user.slice(:name, :waddress, :uid).to_json %>" data-toggle="modal" data-target="#mergeUserModal">
                                 <i class="dropdown-icon fas fa-user-friends"></i> <%= t("administrator.users.settings.merge") %>
                               </button>
                               <% unless user.rooms.length.zero? %>
-                                <%= link_to admin_recordings_path(search: user.email), class: "dropdown-item" do %>
+                                <%= link_to admin_recordings_path(search: user.waddress), class: "dropdown-item" do %>
                                   <i class="dropdown-icon fas fa-video"></i> <%= t("administrator.rooms.table.recordings") %>
                                 <% end %>
                               <% end %>

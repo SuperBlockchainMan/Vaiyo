@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 2021_02_10_111735) do
     t.string "name"
     t.string "username"
     t.string "email"
+    t.string "waddress"
     t.string "social_uid"
     t.string "image"
     t.string "password_digest"

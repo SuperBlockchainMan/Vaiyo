@@ -33,7 +33,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.provider = @user_domain
-
     # User or recpatcha is not valid
     render("sessions/new") && return unless valid_user_or_captcha
 
@@ -43,26 +42,21 @@ class UsersController < ApplicationController
     # User has passed all validations required
     @user.save
 
-    logger.info "Support: #{@user.email} user has been created."
+    logger.info "Support: #{@user.waddress} user has been created."
 
     # Set user to pending and redirect if Approval Registration is set
-    if approval_registration
-      @user.set_role :pending
+    # if approval_registration
+    #   @user.set_role :pending
 
-      return redirect_to root_path,
-        flash: { success: I18n.t("registration.approval.signup") } unless Rails.configuration.enable_email_verification
-    end
+    #   return redirect_to root_path,
+    #     flash: { success: I18n.t("registration.approval.signup") } unless Rails.configuration.enable_email_verification
+    # end
 
-    send_registration_email
-
+    # send_registration_email
     # Sign in automatically if email verification is disabled or if user is already verified.
-#    if !Rails.configuration.enable_email_verification || @user.email_verified
-      @user.set_role(initial_user_role(@user.email))
+    @user.set_role(initial_user_role(@user.waddress))
 
-      login(@user) && return
-#    end
-
-    send_activation_email(@user, @user.create_activation_token)
+    login(@user) && return
 
     redirect_to root_path
   end
@@ -94,12 +88,12 @@ class UsersController < ApplicationController
 
     unless can_edit_user?(@user, current_user)
       params[:user][:name] = @user.name
-      params[:user][:email] = @user.email
+      params[:user][:waddress] = @user.waddress
     end
   
     if current_user.role_id != 5
-      if (params[:user][:email] != current_user.email && User.exists?(email: params[:user][:email]))
-        flash[:alert] = 'This user is already exists. Please choose different email address.'
+      if (params[:user][:waddress] != current_user.waddress && User.exists?(waddress: params[:user][:waddress]))
+        flash[:alert] = 'This user is already exists. Please choose different wallet address.'
         return render ('edit')
       end
 
@@ -107,7 +101,7 @@ class UsersController < ApplicationController
 
       verification = Hash.new
       verification['name'] = params[:user][:name]
-      verification['email'] = params[:user][:email]
+      verification['waddress'] = params[:user][:waddress]
       verification['language'] = params[:user][:language]
       verification['token'] = SecureRandom.alphanumeric(60)
       verification['user_id'] = session[:user_id]
@@ -123,14 +117,14 @@ class UsersController < ApplicationController
       # raise RuntimeError, verification['image']
 
       if Verification.find_or_initialize_by(:user_id => session[:user_id]).update_attributes(verification)
-        acc_info_verification(@user, verification['token'], params[:user][:email])
+        acc_info_verification(@user, verification['token'], params[:user][:waddress])
         return render ('edit')
       else
         flash[:alert] = 'Invalid image type: allowed types are jpg, jpeg, png'
       end
     else
       if @user.update_attributes(user_params)
-        @user.update_attributes(email_verified: false) if user_params[:email] != @user.email
+        @user.update_attributes(email_verified: false) if user_params[:waddress] != @user.waddress
   
         user_locale(@user)
   
@@ -175,7 +169,7 @@ class UsersController < ApplicationController
     admin_path = request.referer.present? ? request.referer : admins_path
     @user = User.include_deleted.find_by(uid: params[:user_uid])
 
-    logger.info "Support: #{current_user.email} is deleting #{@user.email}."
+    logger.info "Support: #{current_user.waddress} is deleting #{@user.waddress}."
 
     self_delete = current_user == @user
     redirect_url = self_delete ? root_path : admin_path
@@ -241,7 +235,7 @@ class UsersController < ApplicationController
       if User.find_by_id(pending_verification[:user_id])
              .update_attributes(
               :name => pending_verification[:name],
-              :email => pending_verification[:email],
+              :waddress => pending_verification[:waddress],
               :language => pending_verification[:language],
             )
         User.find_by_id(pending_verification[:user_id]).update_attribute(:image, pending_verification.image)
@@ -291,7 +285,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :image, :password, :password_confirmation,
+    params.require(:user).permit(:name, :email, :waddress, :image, :password, :password_confirmation,
       :new_password, :provider, :accepted_terms, :language)
   end
 
@@ -311,6 +305,6 @@ class UsersController < ApplicationController
   end
 
   def verification_params
-    params.require(:verification).permit(:name, :email, :image, :language, :token)
+    params.require(:verification).permit(:name, :email, :waddress, :image, :language, :token)
   end
 end

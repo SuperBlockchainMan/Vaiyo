@@ -65,15 +65,15 @@ class SessionsController < ApplicationController
   def create
     logger.info "Support: #{session_params[:waddress]} is attempting to login."
 
-    user = User.include_deleted.find_by(email: session_params[:waddress].downcase)
+    user = User.include_deleted.find_by(waddress: session_params[:waddress].downcase)
 
     is_super_admin = user&.has_role? :super_admin
 
     # Scope user to domain if the user is not a super admin
-    user = User.include_deleted.find_by(email: session_params[:waddress].downcase, provider: @user_domain) unless is_super_admin
+    user = User.include_deleted.find_by(waddress: session_params[:waddress].downcase, provider: @user_domain) unless is_super_admin
 
     # Check user with that email exists
-    return redirect_to(signin_path, alert: I18n.t("invalid_credentials")) unless user #&& verify_recaptcha #dont need recaptcha
+    return redirect_to(signin_path, alert: I18n.t("invalid_credentials")) unless user #&& verify_recaptcha
 
     # Check if authenticators have switched
     return switch_account_to_local(user) if !is_super_admin && auth_changed_to_local?(user)
@@ -258,7 +258,7 @@ class SessionsController < ApplicationController
 
   # Set the user's social id to the new id being passed
   def switch_account_to_social
-    user = User.find_by(email: @auth['info']['email'], provider: @user_domain, social_uid: nil)
+    user = User.find_by(waddress: @auth['info']['waddress'], provider: @user_domain, social_uid: nil)
 
     logger.info "Switching account to social account for #{user.uid}"
 

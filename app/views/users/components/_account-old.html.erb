@@ -38,9 +38,9 @@
       </div>
 
       <div class="col-6">
-        <%= f.label t("email"), class: "form-label" %>
+        <%= f.label t("waddress"), class: "form-label" %>
         <div class="input-icon">
-          <%= f.text_field :email, class: "form-control #{form_is_invalid?(@user, :email)}", placeholder: t("email"), readonly: !@user.greenlight_account? %>
+          <%= f.text_field :waddress, class: "form-control #{form_is_invalid?(@user, :waddress)}", placeholder: t("waddress"), readonly: !@user.greenlight_account? %>
         </div>
       </div>
     </div>

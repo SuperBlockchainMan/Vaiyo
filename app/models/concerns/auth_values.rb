@@ -44,6 +44,10 @@ module AuthValues
     auth['info']['email']
   end
 
+  def auth_waddress(auth)
+    auth['info']['waddress']
+  end
+
   def auth_image(auth)
     case auth['provider']
     when :twitter

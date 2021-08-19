@@ -53,7 +53,7 @@ class RoomsController < ApplicationController
     # Save the room and redirect if it fails
     return redirect_to current_user.main_room, flash: { alert: I18n.t("room.create_room_error") } unless @room.save
 
-    logger.info "Support: #{current_user.email} has created a new room #{@room.uid}."
+    logger.info "Support: #{current_user.waddress} has created a new room #{@room.uid}."
 
     # Redirect to room is auto join was not turned on
     return redirect_to @room,
@@ -145,7 +145,7 @@ class RoomsController < ApplicationController
 
     save_recent_rooms
 
-    logger.info "Support: #{current_user.present? ? current_user.email : @join_name} is joining room #{@room.uid}"
+    logger.info "Support: #{current_user.present? ? current_user.waddress : @join_name} is joining room #{@room.uid}"
     join_room(default_meeting_options)
   end
 
@@ -183,7 +183,7 @@ class RoomsController < ApplicationController
 
   # POST /:room_uid/start
   def start
-    logger.info "Support: #{current_user.email} is starting room #{@room.uid}"
+    logger.info "Support: #{current_user.waddress} is starting room #{@room.uid}"
 
     # Join the user in and start the meeting.
     opts = default_meeting_options
@@ -331,7 +331,7 @@ class RoomsController < ApplicationController
 
   # GET /:room_uid/logout
   def logout
-    logger.info "Support: #{current_user.present? ? current_user.email : 'Guest'} has left room #{@room.uid}"
+    logger.info "Support: #{current_user.present? ? current_user.waddress : 'Guest'} has left room #{@room.uid}"
 
     # Redirect the correct page.
     redirect_to @room
