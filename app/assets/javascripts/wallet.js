@@ -1,47 +1,45 @@
-$(document).ready(function () {
-  const web3 = new Web3("https://cloudflare-eth.com");
+const web3 = new Web3("https://cloudflare-eth.com");
 
-  async function walletConnect() {
-    if (typeof window.ethereum !== "undefined") {
-      console.log("MetaMask is installed!");
-      var accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      // alert(accounts[0]);
-      document.getElementById("txtwaddress").value = accounts[0];
-      document.getElementById("btncnt").value = "Connected";
+async function walletConnect() {
+  if (typeof window.ethereum !== "undefined") {
+    console.log("MetaMask is installed!");
+    var accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    // alert(accounts[0]);
+    document.getElementById("txtwaddress").value = accounts[0];
+    document.getElementById("btncnt").value = "Connected";
+  }
+}
+
+function post(path, params, method = "post") {
+  // The rest of this code assumes you are not using a library.
+  // It can be made less verbose if you use one.
+  const form = document.createElement("form");
+  form.method = method;
+  form.action = path;
+
+  for (const key in params) {
+    if (params.hasOwnProperty(key)) {
+      const hiddenField = document.createElement("input");
+      hiddenField.type = "hidden";
+      hiddenField.name = key;
+      hiddenField.value = params[key];
+
+      form.appendChild(hiddenField);
     }
   }
 
-  function post(path, params, method = "post") {
-    // The rest of this code assumes you are not using a library.
-    // It can be made less verbose if you use one.
-    const form = document.createElement("form");
-    form.method = method;
-    form.action = path;
+  document.body.appendChild(form);
+  form.submit();
+}
 
-    for (const key in params) {
-      if (params.hasOwnProperty(key)) {
-        const hiddenField = document.createElement("input");
-        hiddenField.type = "hidden";
-        hiddenField.name = key;
-        hiddenField.value = params[key];
+async function walletConnect1() {
+  if (typeof window.ethereum !== "undefined") {
+    console.log("MetaMask is installed!");
+    var accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    // alert(accounts[0]);
+    // document.getElementById("txtwaddress").value = accounts[0];
+    // document.getElementById("btncnt").value = "Connected";
 
-        form.appendChild(hiddenField);
-      }
-    }
-
-    document.body.appendChild(form);
-    form.submit();
+    post("/u/login/", { waddress: accounts[0] });
   }
-
-  async function walletConnect1() {
-    if (typeof window.ethereum !== "undefined") {
-      console.log("MetaMask is installed!");
-      var accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      // alert(accounts[0]);
-      // document.getElementById("txtwaddress").value = accounts[0];
-      // document.getElementById("btncnt").value = "Connected";
-
-      post("/u/login/", { waddress: accounts[0] });
-    }
-  }
-});
+}
