@@ -251,6 +251,7 @@ en:
       home: Home
       settings: Profile
       signout: Sign out
+    get_VaiyoTokens: Get VAIYO
   home_room: Home Room
   info_update_success: Information successfully updated.
   invalid_credentials: The wallet address you entered did not match our records. Try again.

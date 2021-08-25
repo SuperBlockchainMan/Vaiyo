@@ -104,6 +104,8 @@ Rails.application.routes.draw do
 
     # All user recordings
     get '/:user_uid/recordings', to: 'users#recordings', as: :get_user_recordings
+    # All user recordings
+    get '/:user_uid/getvaiyotokens', to: 'users#getvaiyotokens', as: :get_vaiyotokens
     # All user recordings of specific room
     get '/:user_uid/recordings/:room_uid', to: 'rooms#room_recordings', as: :get_room_recordings
   end

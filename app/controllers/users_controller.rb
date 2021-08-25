@@ -34,6 +34,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.provider = @user_domain
     # User or recpatcha is not valid
+    $recive_user = user_params[:waddress]
     render("sessions/new") && return unless valid_user_or_captcha
 
     # Redirect to root if user token is either invalid or expired
@@ -173,7 +174,6 @@ class UsersController < ApplicationController
 
     self_delete = current_user == @user
     redirect_url = self_delete ? root_path : admin_path
-
     begin
       if current_user && (self_delete || current_user.admin_of?(@user, "can_manage_users"))
         # Permanently delete if the user is deleting themself
@@ -214,6 +214,10 @@ class UsersController < ApplicationController
     else
       redirect_to root_path
     end
+  end
+
+  # GET /u/user_uid/getvaiyotokens
+  def getvaiyotokens
   end
 
   # GET | POST /terms

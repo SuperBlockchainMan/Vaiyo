@@ -37,6 +37,7 @@
     <meta name="viewport" content= "width=device-width, user-scalable=no">
     <%= csrf_meta_tags %>
 
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <!-- Global javascript variables and helpers. -->
     <script type="text/javascript">
       window.GreenLight = {};
@@ -62,7 +63,6 @@
       window.I18nFallback = <%= fallback_translations.to_json.html_safe %>
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script> #add web3 library
   </head>
 
   <body class="app-background" data-controller="<%= params[:controller] %>" data-action="<%= params[:action] %>" data-relative-root="<%= Rails.configuration.relative_url_root || "/" %>">

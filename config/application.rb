@@ -113,7 +113,7 @@ module Greenlight
     config.pagination_rows = ENV['NUMBER_OF_ROWS'].to_i.zero? ? 25 : ENV['NUMBER_OF_ROWS'].to_i
 
     # Whether the user has defined the variables required for recaptcha
-    config.recaptcha_enabled = ENV['RECAPTCHA_SITE_KEY'].present?
+    config.recaptcha_enabled = false #ENV['RECAPTCHA_SITE_KEY'].present?
 
     # Show/hide "Add to Google Calendar" button in the room page
     config.enable_google_calendar_button = parse_bool(ENV['ENABLE_GOOGLE_CALENDAR_BUTTON'])

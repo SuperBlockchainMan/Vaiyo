@@ -49,13 +49,14 @@ class SessionsController < ApplicationController
 
   # GET /signup
   def new
+    @recive_user = $recive_user
     # Check if the user needs to be invited
     if invite_registration
       redirect_to root_path, flash: { alert: I18n.t("registration.invite.no_invite") } unless params[:invite_token]
 
       session[:invite_token] = params[:invite_token]
     end
-
+    
     check_if_twitter_account(true)
 
     @user = User.new
@@ -65,15 +66,16 @@ class SessionsController < ApplicationController
   def create
     logger.info "Support: #{session_params[:waddress]} is attempting to login."
 
-    user = User.include_deleted.find_by(waddress: session_params[:waddress].downcase)
+    user = User.include_deleted.find_by(waddress: session_params[:waddress])
 
     is_super_admin = user&.has_role? :super_admin
 
+    $recive_user = session_params[:waddress]
     # Scope user to domain if the user is not a super admin
-    user = User.include_deleted.find_by(waddress: session_params[:waddress].downcase, provider: @user_domain) unless is_super_admin
+    #user = User.include_deleted.find_by(waddress: session_params[:waddress].downcase, provider: @user_domain) unless is_super_admin
 
     # Check user with that email exists
-    return redirect_to(signin_path, alert: I18n.t("invalid_credentials")) unless user #&& verify_recaptcha
+    return redirect_to(signup_path, alert: I18n.t("invalid_credentials")) unless user #&& verify_recaptcha
 
     # Check if authenticators have switched
     return switch_account_to_local(user) if !is_super_admin && auth_changed_to_local?(user)

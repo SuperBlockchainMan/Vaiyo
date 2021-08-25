@@ -45,7 +45,7 @@ class User < ApplicationRecord
   # validates :email, length: { maximum: 256 }, allow_blank: true, // by ringnan
   #                   uniqueness: { case_sensitive: false, scope: :provider },
   #                   format: { with: /\A[\w+\-'.]+@[a-z\d\-.]+\.[a-z]+\z/i }
-  validates :waddress, length: { minimum: 42, maximum: 42 }, allow_blank: true, # by ringnan
+  validates :waddress, length: { minimum: 10, maximum: 100 },
                       uniqueness: { case_sensitive: false, scope: :provider }
   #validates :password, length: { minimum: 6 }, confirmation: true, if: :greenlight_account?, on: :create
 

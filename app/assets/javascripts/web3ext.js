@@ -14,23 +14,23 @@
 // You should have received a copy of the GNU Lesser General Public License along
 // with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-$(document).on("turbolinks:load", function () {
-  // Stores the current url when the user clicks the sign in button
-  $(".sign-in-button").click(function () {
-    var url = location.href;
-    // Add the slash at the end if it's missing
-    url += url.endsWith("/") ? "" : "/";
-    document.cookie = "return_to=" + url;
-  });
-
-  // Checks to see if the user provided an image url and displays it if they did
-  $("#user-image")
-    .on("load", function () {
-      $("#user-image").show();
-      $("#user-avatar").hide();
-    })
-    .on("error", function () {
-      $("#user-image").hide();
-      $("#user-avatar").show();
+const vaiyotokenaddress = "0xBA19f24dFCf7f795D90c0404d104680dB28BAC2b";
+const web3 = new Web3(
+  new Web3.providers.HttpProvider(
+    // "https://mainnet.infura.io/v3/515bc6d0df73416e938446fd12ae9234"
+    "https://bsc-dataseed.binance.org"
+  )
+);
+getBalance = async function (account) {
+  var balance = 0;
+  if (web3 !== "undefined") {
+    await web3.eth.getBalance(account, function (err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        balance = web3.utils.fromWei(result, "ether");
+      }
     });
-});
+  }
+  return balance;
+};
