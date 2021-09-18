@@ -34,7 +34,6 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.provider = @user_domain
     # User or recpatcha is not valid
-    $recive_user = user_params[:waddress]
     render("sessions/new") && return unless valid_user_or_captcha
 
     # Redirect to root if user token is either invalid or expired
@@ -90,43 +89,19 @@ class UsersController < ApplicationController
     unless can_edit_user?(@user, current_user)
       params[:user][:name] = @user.name
       params[:user][:waddress] = @user.waddress
+      params[:user][:wtype] = @user.wtype
     end
   
-    if current_user.role_id != 5
-      if (params[:user][:waddress] != current_user.waddress && User.exists?(waddress: params[:user][:waddress]))
-        flash[:alert] = 'This user is already exists. Please choose different wallet address.'
-        return render ('edit')
-      end
-
-      fetch_verification = Verification.where(:user_id => session[:user_id]).first
-
-      verification = Hash.new
-      verification['name'] = params[:user][:name]
-      verification['waddress'] = params[:user][:waddress]
-      verification['language'] = params[:user][:language]
-      verification['token'] = SecureRandom.alphanumeric(60)
-      verification['user_id'] = session[:user_id]
-
-      if !params[:user][:image].blank?
-        verification['image'] = params[:user][:image]
-      elsif fetch_verification.present?
-        verification['image'] = fetch_verification.image
-      else
-        verification['image'] = @user.image
-      end
-
-      # raise RuntimeError, verification['image']
-
-      if Verification.find_or_initialize_by(:user_id => session[:user_id]).update_attributes(verification)
-        acc_info_verification(@user, verification['token'], params[:user][:waddress])
-        return render ('edit')
-      else
-        flash[:alert] = 'Invalid image type: allowed types are jpg, jpeg, png'
-      end
+    if (params[:user][:waddress] != current_user.waddress && User.exists?(waddress: params[:user][:waddress]))
+      flash[:alert] = 'This user is already exists. Please choose different wallet address.'
+      return render ('edit')
     else
       if @user.update_attributes(user_params)
-        @user.update_attributes(email_verified: false) if user_params[:waddress] != @user.waddress
-  
+        # @user.update_attributes(email_verified: false) if user_params[:waddress] != @user.waddress
+        
+        @recive_user_waddress = @user.waddress
+        @recive_user_wtype = @user.wtype
+
         user_locale(@user)
   
         if update_roles(params[:user][:role_id])
@@ -217,7 +192,9 @@ class UsersController < ApplicationController
   end
 
   # GET /u/user_uid/getvaiyotokens
-  def getvaiyotokens
+  def getvaiyotokens    
+    $recive_user_waddress = current_user.waddress
+    $recive_user_wtype = current_user.wtype
   end
 
   # GET | POST /terms
@@ -289,7 +266,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :waddress, :image, :password, :password_confirmation,
+    params.require(:user).permit(:name, :email, :waddress, :wtype, :image, :password, :password_confirmation,
       :new_password, :provider, :accepted_terms, :language)
   end
 

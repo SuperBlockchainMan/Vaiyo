@@ -49,7 +49,8 @@ class SessionsController < ApplicationController
 
   # GET /signup
   def new
-    @recive_user = $recive_user
+    $recive_user_waddress = session_params[:waddress]
+    $recive_user_wtype = session_params[:wtype]
     # Check if the user needs to be invited
     if invite_registration
       redirect_to root_path, flash: { alert: I18n.t("registration.invite.no_invite") } unless params[:invite_token]
@@ -70,12 +71,11 @@ class SessionsController < ApplicationController
 
     is_super_admin = user&.has_role? :super_admin
 
-    $recive_user = session_params[:waddress]
     # Scope user to domain if the user is not a super admin
     #user = User.include_deleted.find_by(waddress: session_params[:waddress].downcase, provider: @user_domain) unless is_super_admin
 
     # Check user with that email exists
-    return redirect_to(signup_path, alert: I18n.t("invalid_credentials")) unless user #&& verify_recaptcha
+    return redirect_to(signup_path(waddress: session_params[:waddress], wtype: session_params[:wtype]), alert: I18n.t("invalid_credentials")) unless user #&& verify_recaptcha
 
     # Check if authenticators have switched
     return switch_account_to_local(user) if !is_super_admin && auth_changed_to_local?(user)
@@ -92,7 +92,7 @@ class SessionsController < ApplicationController
       # Check that the user has verified their account
       return redirect_to(account_activation_path(digest: user.activation_digest)) unless user.activated?
     end
-
+    
     login(user)
   end
 
@@ -168,7 +168,7 @@ class SessionsController < ApplicationController
 
   def session_params
     # params.require(:session).permit(:waddress)
-    params.permit(:waddress)
+    params.permit(:waddress, :wtype)
   end
 
   def one_provider

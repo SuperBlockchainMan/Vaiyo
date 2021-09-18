@@ -58,9 +58,13 @@
   font-size: 20px;
 }
 
+.icon-down {
+  margin: 8px;
+}
+
 .bnb-icon {
-  height: 50px;
-  width: 50px;
+  height: 30px;
+  width: 30px;
   display: block;
   /* Other styles here */
 }
@@ -72,10 +76,20 @@
   outline: none !important;
   z-index: 1;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0) !important;
+  margin-right: 25px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
-textarea:focus,
+.vaiyo-form textarea:focus,
 input:focus {
   outline: none !important;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0) !important;
   z-index: 1;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 7px 15px;
+  cursor: pointer;
 }

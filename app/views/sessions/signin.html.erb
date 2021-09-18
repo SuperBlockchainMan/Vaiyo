@@ -20,51 +20,64 @@
           <h2 class="mx-auto d-block"><%= t("login_title") %></h2>
         </div>
         <div class="col-lg-6 mx-auto p-5 d-block">
-          <%= image_tag(asset_url('metamask-alternative.png'), alt:"") %>
+          <%= image_tag(asset_url('metamask-alternative.png'), id:"certain-image", class:"wallet-image", alt:"") %>
         </div>
         <div class="m-5">
-          <button type="button" value="Connect Wallet" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-            Connect Wallet
+          <button type="button" value="Sign In" class="btn btn-primary btn-lg" onclick="signinWithWallet()">
+            Sign In
           </button>
-        </div>      
-        
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">
-                      Connect to a wallet
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-secondary w-100" onclick="connectWithWallet('metamask', 'signin')" data-dismiss="modal">Metamask</button>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-secondary w-100" onclick="connectWithWallet('trustwallet', 'signin')" data-dismiss="modal">TrustWallet</button>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-secondary w-100" onclick="connectWithWallet('mathwallet', 'signin')" data-dismiss="modal">MathWallet</button>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-secondary w-100" onclick="connectWithWallet('tokenpocket', 'signin')" data-dismiss="modal">TokenPocket</button>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-secondary w-100" onclick="connectWithWallet('walletconnect', 'signin')" data-dismiss="modal">WalletConnect</button>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-secondary w-100" onclick="connectWithWallet('binance', 'signin')" data-dismiss="modal">Binance Chain Wallet</button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary w-100" data-dismiss="modal">Close</button>
-                </div>
-            </div>
         </div>
+        <div class="toggle-display-wallet-options m-5" onclick="togleOtherWallet()" data-toggle="collapse" data-target="#cards_landscape_wrap-2">
+          <i class="material-icons" id="otherwallet">keyboard_arrow_right</i>
+          <h4 class="mt-2">Use a different wallet</h4>
+        </div>
+      </div>
+  </div>
 
+  <!-- Topic Cards -->
+  <div class="collapse" id="cards_landscape_wrap-2">
+      <div class="container" id="demo" style="max-width:500px;">
+          <div class="row">
+              <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 mb-5">
+                      <div class="card-flyer">
+                          <div class="text-box" id="btn-metamask" onclick="setWallet('metamask')">
+                              <div class="image-box">
+                                  <%= image_tag(asset_url('metamask-alternative.png'), class:"btn-image", alt:"Card image") %>
+                              </div>
+                              <div class="text-container">
+                                  <h6>Metamask</h6>
+                                  
+                              </div>
+                          </div>
+                      </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 mb-5">
+                      <div class="card-flyer">
+                          <div class="text-box" id="btn-binance" onclick="setWallet('binance')">
+                              <div class="image-box">
+                                  <%= image_tag(asset_url('binance.png'), class:"btn-image", alt:"Card image") %>
+                              </div>
+                              <div class="text-container">                                    
+                                  <h6>BinanceWallet</h6>
+                              </div>
+                          </div>
+                      </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 mb-5">
+                      <div class="card-flyer">
+                          <!-- <div class="text-box" onclick="setWallet('mathwallet')"> -->
+                          <div class="text-box disabled">
+                              <div class="image-box">
+                                  <%= image_tag(asset_url('mathwallet.png'), class:"btn-image", alt:"Card image") %>
+                              </div>
+
+                              <div class="text-container">
+                                  <h6>MathWallet</h6>
+                              </div>
+                          </div>
+                      </div>
+              </div>
+          </div>
       </div>
   </div>
 </div>
