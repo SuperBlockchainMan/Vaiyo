@@ -1,4 +1,4 @@
-let currentAccount = null;
+let currentAccount = "";
 let currentWallet = "metamask";
 function post(path, params, method = "post") {
   // The rest of this code assumes you are not using a library.
@@ -55,6 +55,9 @@ async function connectWithWallet(wallettype, where) {
       await connectMetamask();
       break;
     case "binance":
+        if(window.BinanceChain.chainId != 0x38) {
+          await BinanceChain.switchNetwork("bsc-mainnet");
+        }   
       await connectBinance();
       break;
     case "mathwallet":
@@ -64,20 +67,22 @@ async function connectWithWallet(wallettype, where) {
     // code block
   }
 
-  if (where == "signin") {
-    post("/u/login/", { waddress: currentAccount, wtype: wallettype });
-  }
-  if (where == "signup") {
-    document.getElementById("txtwaddress").value = currentAccount;
-    document.getElementById("wtype").value = wallettype;
-  }
-  if (where == "profile") {
-    document.getElementById("txtwaddress1").value = currentAccount;
-    document.getElementById("wtype1").value = wallettype;
-  }
-  if (where == "old") {
-    document.getElementById("txtwaddress2").value = currentAccount;
-    document.getElementById("wtype2").value = wallettype;
+  if(currentAccount != "") {
+    if (where == "signin") {
+      post("/u/login/", { waddress: currentAccount, wtype: wallettype });
+    }
+    if (where == "signup") {
+      document.getElementById("txtwaddress").value = currentAccount;
+      document.getElementById("wtype").value = wallettype;
+    }
+    if (where == "profile") {
+      document.getElementById("txtwaddress1").value = currentAccount;
+      document.getElementById("wtype1").value = wallettype;
+    }
+    if (where == "old") {
+      document.getElementById("txtwaddress2").value = currentAccount;
+      document.getElementById("wtype2").value = wallettype;
+    }
   }
 }
 function handleAccountsChanged(accounts) {
@@ -107,15 +112,6 @@ async function connectMetamask() {
 async function connectBinance() {
   if (typeof window.BinanceChain !== "undefined") {
     try{
-      if(_test_ == false) {
-        if(window.BinanceChain.chainId != 0x38) {
-          await BinanceChain.switchNetwork("bsc-mainnet");
-        }   
-      } else {
-        if(window.BinanceChain.chainId != 0x61) {
-          await BinanceChain.switchNetwork("bsc-testnet");
-        }   
-      }
       const accounts = await BinanceChain.request({
         method: "eth_requestAccounts",
       });
@@ -144,7 +140,6 @@ async function connectMathwallet() {
 async function changeNetwork(_wtype) {
   if (_wtype == "binance") {
     if (typeof window.BinanceChain !== "undefined") {
-      if (_test_ == false) {
         if (window.BinanceChain.chainId != 0x38) {
           await BinanceChain.switchNetwork("bsc-mainnet")
             .then((e) => {
@@ -153,20 +148,9 @@ async function changeNetwork(_wtype) {
               console.log(e);
             });
         }
-      } else {
-        if (window.BinanceChain.chainId != 0x61) {
-          await BinanceChain.switchNetwork("bsc-testnet")
-            .then((e) => {
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        }
-      }
     }
   } /*if (_wtype == "metamask")*/ else {
     if (typeof window.ethereum !== "undefined") {
-      if (_test_ == false) {
         if (window.ethereum.chainId != 0x38) {
           await window.ethereum
             .request({
@@ -179,20 +163,6 @@ async function changeNetwork(_wtype) {
               console.log(e);
             });
         }
-      } else {
-        if (window.ethereum.chainId != 0x61) {
-          await window.ethereum
-            .request({
-              method: "wallet_switchEthereumChain",
-              params: [{ chainId: "0x61" }],
-            })
-            .then((e) => {
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        }
-      }
     }
   }
 }
