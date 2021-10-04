@@ -69,6 +69,12 @@ var drawer = async function () {
           });
 
         document
+          .getElementById("claim")
+          .addEventListener("click", function () {
+            claimVaiyoTokens();
+          });
+
+        document
           .getElementById("w-address-tooltip")
           .addEventListener("mouseout", function () {
             var tooltip = document.getElementById("myTooltip");
@@ -82,7 +88,7 @@ var drawer = async function () {
         document
           .getElementById("addVAIYObtn")
           .addEventListener("click", async function () {
-            alert("Add VAIYO");
+            showIndacoinModalForVAIYO();
           });
         document
           .getElementById("swapVAIYOBtn")
@@ -92,7 +98,7 @@ var drawer = async function () {
         document
           .getElementById("addFunsbtn")
           .addEventListener("click", async function () {
-            alert("Add Funds");
+            showIndacoinModalForBNBORBUSD();
           });
       })
       .catch((e) => {

@@ -55,9 +55,15 @@ async function connectWithWallet(wallettype, where) {
       await connectMetamask();
       break;
     case "binance":
+      if(_test_ == false) {
         if(window.BinanceChain.chainId != 0x38) {
           await BinanceChain.switchNetwork("bsc-mainnet");
         }   
+      } else {
+        if(window.BinanceChain.chainId != 0x61) {
+          await BinanceChain.switchNetwork("bsc-testnet");
+        }   
+      }
       await connectBinance();
       break;
     case "mathwallet":
@@ -140,6 +146,7 @@ async function connectMathwallet() {
 async function changeNetwork(_wtype) {
   if (_wtype == "binance") {
     if (typeof window.BinanceChain !== "undefined") {
+      if (_test_ == false) {
         if (window.BinanceChain.chainId != 0x38) {
           await BinanceChain.switchNetwork("bsc-mainnet")
             .then((e) => {
@@ -148,9 +155,20 @@ async function changeNetwork(_wtype) {
               console.log(e);
             });
         }
+      } else {
+        if (window.BinanceChain.chainId != 0x61) {
+          await BinanceChain.switchNetwork("bsc-testnet")
+            .then((e) => {
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      }
     }
   } /*if (_wtype == "metamask")*/ else {
     if (typeof window.ethereum !== "undefined") {
+      if (_test_ == false) {
         if (window.ethereum.chainId != 0x38) {
           await window.ethereum
             .request({
@@ -163,6 +181,20 @@ async function changeNetwork(_wtype) {
               console.log(e);
             });
         }
+      } else {
+        if (window.ethereum.chainId != 0x61) {
+          await window.ethereum
+            .request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: "0x61" }],
+            })
+            .then((e) => {
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      }
     }
   }
 }
